@@ -1,0 +1,53 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:700italic,300,400);
+body {
+  transition: 0.4s;
+  background-color: #111;
+  font-family: 'Roboto';
+  font-weight: 300;
+}
+
+h1,
+h3 {
+  transition: 0.4s;
+  color: white;
+  font-size: 24px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-weight: 700;
+  font-style: italic;
+  font-size: 48px;
+}
+
+h3 small {
+  font-size: 16px;
+  font-weight: 100;
+}
+
+#player {
+  width: 100%;
+}
+#canvas {
+  transition: 0.4s;
+  background-color: rgba(0,0,0,0);
+}
+
+#URL {
+  width: 50%;
+  margin: 10px;
+  height 55px;
+  text-align: center;
+}
+
+#artwork {
+  position: absolute;
+  top: 10%;
+  right: 5%;
+}
+
+.toggle-scale, .toggle-style {
+  position: fixed;
+  right: 5%;
+  top: 5%;
+}

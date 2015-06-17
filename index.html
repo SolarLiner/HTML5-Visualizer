@@ -1,0 +1,33 @@
+<html>
+	<head>
+		<title>WebAudio Viz Test</title>
+		<link href="style.css" rel="stylesheet" />
+		
+		<script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+		<script src="http://www.smartjava.org/examples/webaudio/jquery-1.8.0.min.js"></script>
+		<script src="node_modules/commonjs/"></script>
+		
+		<link rel="import" href="bower_components/polymer/polymer.html">
+	</head>
+	<body>
+		<button onclick="toggleScale()" id="FFTScale">Change scale (Linear/Log)</button>
+		<button onclick="toggleStyle()" id="FFTStyle">Change style (Stroked/Filled)</button>
+		<button onclick="toggleMode()"	if="FFTMode" >Change mode (Oscilloscope/Spectrum)</button>
+		<input type="text" id="URL" placeholder="SoundCloud/Stream URL"></input><button id="SC-submit" onclick="Fetch()">Listen</button>
+		
+		<h1 id="author">Author</h1>
+		<h3 id="title">Title <small>by User</small></h3>
+		
+		<img id="artwork" alt="artwork" width="128" height="128" crossorigin="anonymous"></img>
+		
+		<audio id="player" loop controls crossorigin="anonymous"></audio>
+		<canvas id="canvas" width="1500" height="700"></canvas>
+		
+		<script src="js/color-thief.js"></script>
+		<script src="js/id3-minimized.js"></script>
+		<script src="js/"
+		<script src="js/metadata.js"></script>
+		<script src="js/index.js"></script>
+		<script src="viz.js"></script>
+	</body>
+</html>
