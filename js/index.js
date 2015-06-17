@@ -40,7 +40,7 @@ function getTrack(link) {
 	  streamURL = link;
     showUser = false;
 	  loadURL(streamURL, function(tags) {
-      var colThief = new colorThief();
+      var colThief = new ColorThief();
       
       author = tags.artist;
   	  title = tags.title;
