@@ -1,5 +1,5 @@
 # HTML5-Visualizer
-HTML5 basic visualizer - Oscilloscope and Spectrum
+HTML5 basic visualizer - Oscilloscope and Spectrum | [Demo](http://solarliner.github.io/HTML5-Visualizer/)
 
 ## What is it?
 It's an HTML5 Web Audio experiment using only CSS and JavaScript. It started as a "how to display a spectrometer" to "how to display it in the log scale" to "make something out of this.
