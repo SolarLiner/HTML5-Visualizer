@@ -44,13 +44,17 @@ function getTrack(link) {
       
       author = tags.artist;
   	  title = tags.title;
-      image = "data:"+tags.picture.format;
-      var b64 = "";
-      
-      tags.picture.data.forEach(function(data) {
-        b64 += String.fromCharCode(data);
-      }, this);
-      image += ";base64,"+window.btoa(b64);
+      if(tags.picture != undefined) {
+        image = "data:"+tags.picture.format;
+        var b64 = "";
+        
+        tags.picture.data.forEach(function(data) {
+          b64 += String.fromCharCode(data);
+        }, this);
+        image += ";base64,"+window.btoa(b64);
+    } else {
+      image = undefined;
+    }
       
   	  console.log("Got URL: '"+streamURL+"'");
       console.log("Got    : "+author+" - "+title+" ["+user+"]");
@@ -122,6 +126,26 @@ function get(url, callback) {
   request.send(null);
 }
 
+function $_GET(val, decode) {
+    var result = undefined,
+        tmp = [];
+    location.search
+    //.replace ( "?", "" ) 
+    // this is better, there might be a question mark inside
+    .substr(1)
+        .split("&")
+        .forEach(function (item) {
+        tmp = item.split("=");
+        if (tmp[0] === val) result = decode? decodeURIComponent(tmp[1]) : tmp[1];
+    });
+    return result;
+}
+
 
 // ========
-getTrack('https://soundcloud.com/ima-music/mark-tyner-pale-blue-dot');
+var song = $_GET('s', false);
+if(song == undefined) getTrack('https://soundcloud.com/ima-music/mark-tyner-pale-blue-dot');
+else {
+  $('#URL').val(song);
+  getTrack(song);
+}
