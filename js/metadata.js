@@ -4,6 +4,6 @@ function loadURL(url, callback) {
 		
 		if(callback) callback(tags);
 	},
-	{tags: ["artist", "title", "artwork"]});
+	{tags: ["artist", "title", "picture"]});
 }
 

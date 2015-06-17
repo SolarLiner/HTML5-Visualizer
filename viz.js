@@ -1,11 +1,12 @@
 // ======== FFT Spectrum Script ========
 
-var displaylog = true;    // Display mode
-var filled = false;       // Fill mode (stroke/fill for false/true)
-var oscilloscope = false; // Spectrum or Oscilloscope
-var fftsize = 2048;       // FFT Window size
+var displaylog    = true;     // Display mode
+var filled        = false;    // Fill mode (stroke/fill for false/true)
+var oscilloscope  = false;    // Spectrum or Oscilloscope
+var enhanced      = true;     // Enhanced frequencies "guesstimation"
+var fftsize       = 2048;     // FFT Window size
 
-var foreColor = "white";  // Foreground color
+var foreColor     = "white";  // Foreground color
 
 // create the audio context (chrome only for now)
 if (!window.AudioContext) {
@@ -99,14 +100,22 @@ function drawSpectrum(array) {
       
       ctx.lineTo(i*len, height-value);
     } else {
-      if(displaylog) {
+      if(displaylog) { // Logarithmic scale mode
         var logi = Math.log(i + 1);
-        var nexti = Math.log(i + 2);
+        var lasti = Math.log(i);
         var w = 148*width/array.length;
         
-        ctx.lineTo(logi*w, height - value);
+        var cori = logi;
+        // Try to guesstimate the real frequency in between the two points
+        var lastVal = (array[i-1]/256.0)*height;
         
-      }else {
+        var lerpCtrl = (lastVal-value)/256+0.5; // normalized control point
+        cori = lerp(lasti, logi, lerpCtrl);
+        
+        if (i!=0 && enhanced) ctx.lineTo(cori*w, height - value);
+        else ctx.lineTo(logi*w, height - value);
+        
+      }else {         // Linear mode
         var len = width/array.length;
         
         ctx.lineTo(i*len, height-value);
@@ -148,4 +157,8 @@ function get(url, callback) {
 
   request.open("GET", url, true);            
   request.send(null);
+}
+
+function lerp(a, b, x) {
+  return a*(1-x)+b*x;
 }

@@ -44,7 +44,14 @@ function getTrack(link) {
       
       author = tags.artist;
   	  title = tags.title;
-      colors = tags.artwork;
+      image = "data:"+tags.picture.format;
+      var b64 = "";
+      
+      tags.picture.data.forEach(function(data) {
+        b64 += String.fromCharCode(data);
+      }, this);
+      image += ";base64,"+window.btoa(b64);
+      
   	  console.log("Got URL: '"+streamURL+"'");
       console.log("Got    : "+author+" - "+title+" ["+user+"]");
   	  Listen();
@@ -77,7 +84,7 @@ function Listen() {
   $('body').css("background-color", String.format('rgb({0}, {1}, {2})', colors[0]));
   DOMauthor.css("color", String.format('rgb({0}, {1}, {2})', colors[1]));
   DOMtitle.css("color", String.format('rgb({0}, {1}, {2})', colors[1]));
-  p.css('background-color', String.format('rgba({0}, {1}, {2}, 0.3)', colors[2]));
+  //p.css('background-color', String.format('rgba({0}, {1}, {2}, 0.3)', colors[2]));
   
   changeColor(String.format('rgb({0}, {1}, {2})', colors[1]));
   
