@@ -2,7 +2,9 @@
 /* global loadURL */
 // ======== SoundCloud stuff ========
 var author,
+    UserURL,
     title,
+    TrackURL,
     user,
 	  showUser = true,
     client_data = "client_id=be22d6150f0765b2209862b250934b72",
@@ -18,6 +20,8 @@ function getTrack(link) {
 	  get("http://api.soundcloud.com/resolve.json?url=" +  link + "&" + client_data, function(re) {
 	    var trackInfo = JSON.parse(re);
 	    console.log(trackInfo);
+      UserURL = trackInfo.user.permalink_url;
+      TrackURL  = trackInfo.permalink_url;
 	    
 	    var sTitle = trackInfo.title.split("-");
 	    if(sTitle.length==1){
@@ -37,6 +41,9 @@ function getTrack(link) {
 		console.log("Got: "+author+" - "+title+" at '"+streamURL+"'");
 		
 		Listen();
+    var f = filled? "":"&stroked";
+    var o = oscilloscope? "&osc":"";
+    window.history.pushState('webaudio viz', title.substr(title.search("<small>")), "index.html?s="+link+f+o);
 	  });
   } else { // If other (direct?) link
     streamURL = link;
@@ -63,6 +70,9 @@ function getTrack(link) {
   	  console.log("Got URL: '"+streamURL+"'");
       console.log("Got    : "+author+" - "+title+" ["+user+"]");
   	  Listen();
+      var f = filled? "":"&stroked";
+      var o = oscilloscope? "&osc":"";
+      window.history.pushState('webaudio viz', title.substr(title.search("<small>")), "index.html?s="+streamURL+f+o);
     });
   }
 }
@@ -81,9 +91,12 @@ function Listen() {
   
   console.log("playing: "+author+" - "+title+" ["+user+"]");
   
-  DOMauthor.text(author);
-  if(showUser) DOMtitle.html(title+' <small> by '+user+'</small>');
-  else DOMtitle.html(title.replace(/\(\[/gi, "<small>").replace(/\)\]/gi, "</small>"));
+  DOMauthor.html(String.format('<a href="{1}">{0}</a>',[author, UserURL]))
+  if(showUser) DOMtitle.html(String.format('{0} <small>by <a href="{2}">{1}</a></small>', [title, user, UserURL]));
+  else {
+    var newtitle = title.replace(/(\(|\[)/ig, "<small>").replace(/(\)|\])/ig, "</small>").replace("</small> <small>", " ");
+    DOMtitle.html(String.format('<a href="{1}">{0}</a>', [newtitle, TrackURL]));
+  }
   
   img.on('load', function(){
     var colThief = new ColorThief();
@@ -96,6 +109,7 @@ function Listen() {
     
     changeColor(String.format('rgb({0}, {1}, {2})', colors[1]));
   });
+  $('title')[0].innerText = author+" - "+title+ " | WebAudio Visualization";
 }
 
 function Fetch() {
@@ -148,8 +162,12 @@ function $_GET(val, decode, isflag) {
 
 // ========
 var song = $_GET('s', false, false);
-oscilloscope = $_GET('osc', false, true); oscilloscope = oscilloscope==undefined? false:oscilloscope;
-filled = $_GET('fill', false, true); filled = filled==undefined? true:filled;
+osc = $_GET('osc', false, true);
+oscilloscope = osc==undefined? false:osc;
+
+stroke = $_GET('stroked', false, true);
+filled = stroke==undefined? true:!stroke;
+
 if(song == undefined) getTrack('https://soundcloud.com/refractordj/spaceflight-ep');
 else {
   $('#URL').val(song);
