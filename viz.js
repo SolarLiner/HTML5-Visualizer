@@ -1,7 +1,7 @@
 // ======== FFT Spectrum Script ========
 
 var displaylog    = true;     // Display mode
-var filled        = false;    // Fill mode (stroke/fill for false/true)
+var filled        = true;    // Fill mode (stroke/fill for false/true)
 var oscilloscope  = false;    // Spectrum or Oscilloscope
 var enhanced      = true;     // Enhanced frequencies "guesstimation"
 var fftsize       = 2048;     // FFT Window size

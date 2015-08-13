@@ -1,3 +1,5 @@
+/* global ColorThief */
+/* global loadURL */
 // ======== SoundCloud stuff ========
 var author,
     title,
@@ -37,10 +39,12 @@ function getTrack(link) {
 		Listen();
 	  });
   } else { // If other (direct?) link
-	  streamURL = link;
+    streamURL = link;
     showUser = false;
 	  loadURL(streamURL, function(tags) {
-      var colThief = new ColorThief();
+      if(link.substr(7) == "file://") // Crossorigin fix for local streams
+        $('#player').removeAttr('crossorigin');
+      else $('#player').attr('crossorigin', "anonymous");
       
       author = tags.artist;
   	  title = tags.title;
@@ -81,17 +85,17 @@ function Listen() {
   if(showUser) DOMtitle.html(title+' <small> by '+user+'</small>');
   else DOMtitle.html(title.replace(/\(\[/gi, "<small>").replace(/\)\]/gi, "</small>"));
   
-      
-  var colThief = new ColorThief();
-  var colors = colThief.getPalette(img[0], 3);
-  
-  $('body').css("background-color", String.format('rgb({0}, {1}, {2})', colors[0]));
-  DOMauthor.css("color", String.format('rgb({0}, {1}, {2})', colors[1]));
-  DOMtitle.css("color", String.format('rgb({0}, {1}, {2})', colors[1]));
-  //p.css('background-color', String.format('rgba({0}, {1}, {2}, 0.3)', colors[2]));
-  
-  changeColor(String.format('rgb({0}, {1}, {2})', colors[1]));
-  
+  img.on('load', function(){
+    var colThief = new ColorThief();
+    var colors = colThief.getPalette(img[0], 3);
+    
+    $('body').css("background-color", String.format('rgb({0}, {1}, {2})', colors[0]));
+    DOMauthor.css("color", String.format('rgb({0}, {1}, {2})', colors[1]));
+    DOMtitle.css("color", String.format('rgb({0}, {1}, {2})', colors[1]));
+    //p.css('background-color', String.format('rgba({0}, {1}, {2}, 0.3)', colors[2]));
+    
+    changeColor(String.format('rgb({0}, {1}, {2})', colors[1]));
+  });
 }
 
 function Fetch() {
@@ -114,7 +118,7 @@ String.format = function(text, args) {
     return theString;
 }
 // MISC
-function get(url, callback) {
+/*function get(url, callback) {
   var request = new XMLHttpRequest();
   request.onreadystatechange = function() { 
     if (request.readyState === 4 && request.status === 200) {
@@ -124,9 +128,9 @@ function get(url, callback) {
 
   request.open("GET", url, true);            
   request.send(null);
-}
+}*/
 
-function $_GET(val, decode) {
+function $_GET(val, decode, isflag) {
     var result = undefined,
         tmp = [];
     location.search
@@ -136,15 +140,17 @@ function $_GET(val, decode) {
         .split("&")
         .forEach(function (item) {
         tmp = item.split("=");
-        if (tmp[0] === val) result = decode? decodeURIComponent(tmp[1]) : tmp[1];
+        if (tmp[0] === val) result = isflag? true : (decode? decodeURIComponent(tmp[1]) : tmp[1]);
     });
     return result;
 }
 
 
 // ========
-var song = $_GET('s', false);
-if(song == undefined) getTrack('https://soundcloud.com/ima-music/mark-tyner-pale-blue-dot');
+var song = $_GET('s', false, false);
+oscilloscope = $_GET('osc', false, true); oscilloscope = oscilloscope==undefined? false:oscilloscope;
+filled = $_GET('fill', false, true); filled = filled==undefined? true:filled;
+if(song == undefined) getTrack('https://soundcloud.com/refractordj/spaceflight-ep');
 else {
   $('#URL').val(song);
   getTrack(song);
