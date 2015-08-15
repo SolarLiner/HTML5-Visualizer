@@ -91,8 +91,16 @@ function Listen() {
   
   console.log("playing: "+author+" - "+title+" ["+user+"]");
   
-  DOMauthor.html(String.format('<a href="{1}">{0}</a>',[author, UserURL]))
-  if(showUser) DOMtitle.html(String.format('{0} <small>by <a href="{2}">{1}</a></small>', [title, user, UserURL]));
+  if(showUser){
+      if(TrackURL === undefined || UserURL === undefined){
+        DOMtitle.html(String.format('{0} <small>by {1}</a>', [title, user]));
+        DOMauthor.html(String.format('<a href="{1}">{0}</a>',[author, UserURL]));
+      }
+      else {
+        DOMtitle.html(String.format('{0} <small>by <a href="{2}">{1}</a></small>', [title, user, UserURL]));
+        DOMauthor.text(author);
+      }
+    }
   else {
     var newtitle = title.replace(/(\(|\[)/ig, "<small>").replace(/(\)|\])/ig, "</small>").replace("</small> <small>", " ");
     DOMtitle.html(String.format('<a href="{1}">{0}</a>', [newtitle, TrackURL]));

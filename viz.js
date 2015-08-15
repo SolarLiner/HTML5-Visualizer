@@ -20,10 +20,11 @@ var context = new AudioContext();
 var audioBuffer;
 var sourceNode;
 var analyser;
+var analyserGain;
 var javascriptNode;
 
 // Init the player to a manageable volume for FFT
-$("#player")[0].volume = 0.5;
+//$("#player")[0].volume = 0.5; // Done: Use audioGain to control that
 
 // get the context from the canvas to draw on
 var ctx = $("#canvas").get(0).getContext('2d');
@@ -41,8 +42,11 @@ function setupAudioNodes() {
 
   // setup a javascript node
   javascriptNode = context.createScriptProcessor(1024, 1, 1);
-  // connect to destination, else it isn't called
   javascriptNode.connect(context.destination);
+  
+  // Setup analyser gain
+  analyserGain = context.createGain();
+  analyserGain.gain.value = 0.5;
 
   // setup a analyzer
   analyser = context.createAnalyser();
@@ -51,7 +55,8 @@ function setupAudioNodes() {
   
   // create a buffer source node
   sourceNode = context.createMediaElementSource($('#player')[0]);
-  sourceNode.connect(analyser);
+  sourceNode.connect(analyserGain);
+  analyserGain.connect(analyser);
   analyser.connect(javascriptNode);
 
   sourceNode.connect(context.destination);
