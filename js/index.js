@@ -94,16 +94,24 @@ function Listen() {
   if(showUser){
       if(TrackURL === undefined || UserURL === undefined){
         DOMtitle.html(String.format('{0} <small>by {1}</a>', [title, user]));
-        DOMauthor.html(String.format('<a href="{1}">{0}</a>',[author, UserURL]));
+        DOMauthor.text(author);
       }
       else {
         DOMtitle.html(String.format('{0} <small>by <a href="{2}">{1}</a></small>', [title, user, UserURL]));
-        DOMauthor.text(author);
+        DOMauthor.html(String.format('<a href="{1}">{0}</a>',[author, UserURL]));
       }
     }
   else {
     var newtitle = title.replace(/(\(|\[)/ig, "<small>").replace(/(\)|\])/ig, "</small>").replace("</small> <small>", " ");
-    DOMtitle.html(String.format('<a href="{1}">{0}</a>', [newtitle, TrackURL]));
+    if(TrackURL === undefined || UserURL === undefined){
+      DOMtitle.html(newtitle);
+      DOMauthor.text(author);
+    } else {
+      DOMtitle.html(String.format('<a href="{1}">{0}</a>', [newtitle, TrackURL]));
+      DOMauthor.html(String.format('<a href="{1}">{0}</a>', [author, UserURL]));
+    }
+    
+    
   }
   
   img.on('load', function(){
